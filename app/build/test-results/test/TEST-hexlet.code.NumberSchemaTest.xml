@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="hexlet.code.NumberSchemaTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-11-12T12:56:37.036Z" hostname="DESKTOP-P30E16L" time="0.002">
+<testsuite name="hexlet.code.NumberSchemaTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-11-12T13:02:45.239Z" hostname="DESKTOP-P30E16L" time="0.001">
   <properties/>
-  <testcase name="testNumberSchema()" classname="hexlet.code.NumberSchemaTest" time="0.002"/>
+  <testcase name="testNumberSchema()" classname="hexlet.code.NumberSchemaTest" time="0.001"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
