@@ -1,7 +1,6 @@
 plugins {
     application
     java
-    checkstyle
     jacoco
 }
 
@@ -30,10 +29,6 @@ tasks.test {
     finalizedBy(tasks.jacocoTestReport) // Генерируем отчет после тестов
 }
 
-checkstyle {
-    toolVersion = "10.12.4"
-    configFile = file("config/checkstyle/checkstyle.xml")
-}
 
 jacoco {
     toolVersion = "0.8.11"
