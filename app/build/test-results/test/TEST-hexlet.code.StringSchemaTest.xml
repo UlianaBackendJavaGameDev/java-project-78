@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="hexlet.code.StringSchemaTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-11-12T12:36:47.960Z" hostname="DESKTOP-P30E16L" time="0.007">
+<testsuite name="hexlet.code.StringSchemaTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-11-12T12:56:37.040Z" hostname="DESKTOP-P30E16L" time="0.01">
   <properties/>
   <testcase name="testStringSchemaWithMinLength()" classname="hexlet.code.StringSchemaTest" time="0.002"/>
   <testcase name="testStringSchemaChainAndReplacement()" classname="hexlet.code.StringSchemaTest" time="0.001"/>
-  <testcase name="testStringSchemaWithContains()" classname="hexlet.code.StringSchemaTest" time="0.001"/>
+  <testcase name="testStringSchemaWithContains()" classname="hexlet.code.StringSchemaTest" time="0.0"/>
   <testcase name="testStringSchemaWithRequired()" classname="hexlet.code.StringSchemaTest" time="0.001"/>
-  <testcase name="testStringSchemaWithoutRequired()" classname="hexlet.code.StringSchemaTest" time="0.0"/>
+  <testcase name="testStringSchemaWithoutRequired()" classname="hexlet.code.StringSchemaTest" time="0.001"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

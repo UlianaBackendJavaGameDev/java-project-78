@@ -6,7 +6,7 @@ public abstract class BaseSchema<T, S extends BaseSchema<T, S>> {
     @SuppressWarnings("unchecked")
     public S required() {
         this.required = true;
-        return (S) this; // Возвращаем правильный тип наследника
+        return (S) this;
     }
 
     public boolean isValid(T value) {
