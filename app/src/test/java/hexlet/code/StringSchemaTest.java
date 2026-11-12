@@ -51,7 +51,11 @@ class StringSchemaTest {
     void testStringSchemaChainAndReplacement() {
         Validator v = new Validator();
 
-        StringSchema schema = v.string().required().contains("what");
+        // Разбиваем цепочку, чтобы Java не путалась в типах
+        StringSchema schema = v.string();
+        schema.required();
+        schema.contains("what");
+
         assertTrue(schema.isValid("what does the fox say"));
 
         schema.contains("whatthe");
