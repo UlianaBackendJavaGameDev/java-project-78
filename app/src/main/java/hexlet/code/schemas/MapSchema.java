@@ -5,7 +5,7 @@ import java.util.Map;
 public class MapSchema extends BaseSchema<Map<String, ?>> {
     private Integer size = null;
 
-    // Оставляем сырой тип для хранения
+    // Делаем поле обобщенным, чтобы хранить любые схемы
     private Map<String, BaseSchema<?>> schemas = null;
 
     @Override
@@ -19,10 +19,10 @@ public class MapSchema extends BaseSchema<Map<String, ?>> {
         return this;
     }
 
-    // Используем <? super BaseSchema>, чтобы принимать и сырые, и параметризованные типы
+    // Используем дженерик <T> в методе, чтобы принять ЛЮБУЮ BaseSchema
     @SuppressWarnings("unchecked")
-    public MapSchema shape(Map<String, ? extends BaseSchema<?>> schemas) {
-        this.schemas = (Map<String, BaseSchema<?>>) schemas;
+    public <T> MapSchema shape(Map<String, BaseSchema<T>> schemas) {
+        this.schemas = (Map<String, BaseSchema<?>>) (Map<?, ?>) schemas;
         return this;
     }
 
@@ -36,22 +36,16 @@ public class MapSchema extends BaseSchema<Map<String, ?>> {
             for (Map.Entry<String, BaseSchema<?>> entry : schemas.entrySet()) {
                 String key = entry.getKey();
 
-                // Используем wildcard, чтобы Java не ругалась на Object в методе isValid
-                BaseSchema<?> schema = entry.getValue();
+                // Извлекаем как сырой тип, чтобы вызвать isValid
+                @SuppressWarnings("rawtypes")
+                BaseSchema schema = entry.getValue();
                 Object fieldValue = value.get(key);
 
-                // Если Java продолжит ругаться на типы (Object), используем сырой тип
-                if (!isValidField(schema, fieldValue)) {
+                if (!schema.isValid(fieldValue)) {
                     return false;
                 }
             }
         }
         return true;
-    }
-
-    // Вспомогательный метод с сырым типом, чтобы обойти проверку типов
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    private boolean isValidField(BaseSchema schema, Object value) {
-        return schema.isValid(value);
     }
 }
