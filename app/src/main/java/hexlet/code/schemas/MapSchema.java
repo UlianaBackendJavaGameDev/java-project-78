@@ -5,8 +5,8 @@ import java.util.Map;
 public class MapSchema extends BaseSchema<Map<String, ?>> {
     private Integer size = null;
 
-    // Оставляем <?> здесь
-    private Map<String, BaseSchema<?>> schemas = null;
+    // Убираем <?> здесь, чтобы тесты могли передать сюда Map<String, BaseSchema>
+    private Map<String, BaseSchema> schemas = null;
 
     @Override
     public MapSchema required(){
@@ -19,7 +19,8 @@ public class MapSchema extends BaseSchema<Map<String, ?>> {
         return this;
     }
 
-    public MapSchema shape(Map<String, BaseSchema<?>> schemas) {
+    // Убираем <?> здесь
+    public MapSchema shape(Map<String, BaseSchema> schemas) {
         this.schemas = schemas;
         return this;
     }
@@ -31,18 +32,13 @@ public class MapSchema extends BaseSchema<Map<String, ?>> {
         }
 
         if (schemas != null) {
-            // Убираем <?> из цикла, используем сырой тип BaseSchema
-            for (Map.Entry<String, BaseSchema<?>> entry : schemas.entrySet()) {
+            for (Map.Entry<String, BaseSchema> entry : schemas.entrySet()) {
                 String key = entry.getKey();
 
-                // Если IDEA подчеркивает BaseSchema, просто добавь подавление предупреждения
-                // или оставь как есть — на компиляцию это не влияет
-                @SuppressWarnings("rawtypes")
+                // Сырой тип, чтобы метод isValid принимал Object
                 BaseSchema schema = entry.getValue();
-
                 Object fieldValue = value.get(key);
 
-                // Теперь сюда можно передать Object без ошибки
                 if (!schema.isValid(fieldValue)) {
                     return false;
                 }
