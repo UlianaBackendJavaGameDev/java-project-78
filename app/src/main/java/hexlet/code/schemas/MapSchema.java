@@ -5,7 +5,7 @@ import java.util.Map;
 public class MapSchema extends BaseSchema<Map<String, ?>> {
     private Integer size = null;
 
-    // Убираем <?> здесь, чтобы тесты могли передать сюда Map<String, BaseSchema>
+    // Оставляем сырой тип для поля
     private Map<String, BaseSchema> schemas = null;
 
     @Override
@@ -19,9 +19,9 @@ public class MapSchema extends BaseSchema<Map<String, ?>> {
         return this;
     }
 
-    // Убираем <?> здесь
-    public MapSchema shape(Map<String, BaseSchema> schemas) {
-        this.schemas = schemas;
+    // ДОБАВЛЯЕМ ДЖЕНЕРИК <T> В МЕТОД
+    public <T> MapSchema shape(Map<String, BaseSchema<T>> schemas) {
+        this.schemas = (Map) schemas; // приводим к сырому типу
         return this;
     }
 
@@ -34,8 +34,6 @@ public class MapSchema extends BaseSchema<Map<String, ?>> {
         if (schemas != null) {
             for (Map.Entry<String, BaseSchema> entry : schemas.entrySet()) {
                 String key = entry.getKey();
-
-                // Сырой тип, чтобы метод isValid принимал Object
                 BaseSchema schema = entry.getValue();
                 Object fieldValue = value.get(key);
 
