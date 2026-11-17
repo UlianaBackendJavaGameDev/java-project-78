@@ -5,8 +5,8 @@ import java.util.Map;
 public class MapSchema extends BaseSchema<Map<String, ?>> {
     private Integer size = null;
 
-    // Оставляем сырой тип для поля
-    private Map<String, BaseSchema> schemas = null;
+    // Оставляем сырой тип для хранения
+    private Map<String, BaseSchema<?>> schemas = null;
 
     @Override
     public MapSchema required(){
@@ -19,9 +19,10 @@ public class MapSchema extends BaseSchema<Map<String, ?>> {
         return this;
     }
 
-    // ДОБАВЛЯЕМ ДЖЕНЕРИК <T> В МЕТОД
-    public <T> MapSchema shape(Map<String, BaseSchema<T>> schemas) {
-        this.schemas = (Map) schemas; // приводим к сырому типу
+    // Используем <? super BaseSchema>, чтобы принимать и сырые, и параметризованные типы
+    @SuppressWarnings("unchecked")
+    public MapSchema shape(Map<String, ? extends BaseSchema<?>> schemas) {
+        this.schemas = (Map<String, BaseSchema<?>>) schemas;
         return this;
     }
 
@@ -32,16 +33,25 @@ public class MapSchema extends BaseSchema<Map<String, ?>> {
         }
 
         if (schemas != null) {
-            for (Map.Entry<String, BaseSchema> entry : schemas.entrySet()) {
+            for (Map.Entry<String, BaseSchema<?>> entry : schemas.entrySet()) {
                 String key = entry.getKey();
-                BaseSchema schema = entry.getValue();
+
+                // Используем wildcard, чтобы Java не ругалась на Object в методе isValid
+                BaseSchema<?> schema = entry.getValue();
                 Object fieldValue = value.get(key);
 
-                if (!schema.isValid(fieldValue)) {
+                // Если Java продолжит ругаться на типы (Object), используем сырой тип
+                if (!isValidField(schema, fieldValue)) {
                     return false;
                 }
             }
         }
         return true;
+    }
+
+    // Вспомогательный метод с сырым типом, чтобы обойти проверку типов
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private boolean isValidField(BaseSchema schema, Object value) {
+        return schema.isValid(value);
     }
 }
