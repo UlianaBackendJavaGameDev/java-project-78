@@ -4,7 +4,8 @@ import java.util.Map;
 
 public class MapSchema extends BaseSchema<Map<String, ?>> {
     private Integer size = null;
-    private Map<String, BaseSchema> schemas = null;
+    // Используем wildcard для хранения
+    private Map<String, BaseSchema<?>> schemas = null;
 
     @Override
     public MapSchema required(){
@@ -17,9 +18,11 @@ public class MapSchema extends BaseSchema<Map<String, ?>> {
         return this;
     }
 
-    // Сырой тип в параметре. Примет ВСЁ: и BaseSchema, и BaseSchema<String>
-    public MapSchema shape(Map<String, BaseSchema> schemas) {
-        this.schemas = schemas;
+    // Принимаем любую BaseSchema<?> (и BaseSchema<String>, и сырой BaseSchema)
+    @SuppressWarnings("unchecked")
+    public MapSchema shape(Map<String, ? extends BaseSchema<?>> schemas) {
+        // Приводим к нужному типу для сохранения в поле
+        this.schemas = (Map<String, BaseSchema<?>>) schemas;
         return this;
     }
 
@@ -30,10 +33,11 @@ public class MapSchema extends BaseSchema<Map<String, ?>> {
         }
 
         if (schemas != null) {
-            for (Map.Entry<String, BaseSchema> entry : schemas.entrySet()) {
+            for (Map.Entry<String, BaseSchema<?>> entry : schemas.entrySet()) {
                 String key = entry.getKey();
 
-                // Сырой тип здесь тоже обязателен, чтобы передать Object
+                // Используем сырой BaseSchema для передачи Object в isValid
+                @SuppressWarnings("rawtypes")
                 BaseSchema schema = entry.getValue();
                 Object fieldValue = value.get(key);
 
